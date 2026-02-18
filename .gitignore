@@ -1,0 +1,4 @@
+*.o
+*.exe
+pico-build/
+pico-sdk/
