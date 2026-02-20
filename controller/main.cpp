@@ -1,12 +1,13 @@
 #include <cstdio>
 #include "pico/stdlib.h"
+#include "Program.hpp"
 
 int main()
 {
-  stdio_init_all();
+  Program prog;
   while (true)
   {
-    printf("Hello world!\n");
-    sleep_ms(4002);
+    prog.tick();
   }
+  return 0;
 }
