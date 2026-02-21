@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AutoClearFlag.hpp"
+
 class PauseMenu
 {
 public:
@@ -9,4 +11,9 @@ public:
   bool didQuit();
   void enable();
   void tick();
+
+private:
+  bool active;
+  AutoClearFlag paused;
+  AutoClearFlag quit;
 };
