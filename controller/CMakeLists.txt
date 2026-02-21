@@ -11,6 +11,7 @@ endif()
 
 add_executable(controller
   main.cpp
+  Program.cpp
   )
 
 target_compile_features(controller PUBLIC

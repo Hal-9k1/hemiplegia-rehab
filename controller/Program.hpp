@@ -1,8 +1,12 @@
 #pragma once
 
-#include "Config.hpp"
-#include "Inputs.hpp"
 #include "Activity.hpp"
+#include "ActivityRegistry.hpp"
+#include "Config.hpp"
+#include "DataManager.hpp"
+#include "Inputs.hpp"
+#include "MainMenu.hpp"
+#include "PauseMenu.hpp"
 
 class Program
 {
@@ -13,5 +17,9 @@ public:
 private:
   Config conf;
   Inputs inputs;
+  MainMenu mainMenu;
+  PauseMenu pauseMenu;
+  ActivityRegistry activityReg;
   Activity *pCurrentActivity;
+  DataManager dataMgr;
 };
