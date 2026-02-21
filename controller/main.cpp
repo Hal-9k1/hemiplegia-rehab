@@ -1,4 +1,5 @@
 #include <cstdio>
+#include "pico/stdio.h"
 #include "pico/time.h"
 #include "imu.hpp"
 
