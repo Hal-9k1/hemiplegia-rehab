@@ -17,7 +17,10 @@ target_compile_features(controller PUBLIC
   cxx_std_17)
 
 target_link_libraries(controller PUBLIC
-  pico_stdlib
+  pico_printf
+  pico_stdio
+  pico_hardware_i2c
+  pico_time
   )
 # output via USB, not UART
 pico_enable_stdio_uart(controller 0)
