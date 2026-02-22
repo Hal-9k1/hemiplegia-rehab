@@ -6,10 +6,10 @@ struct Vec3f
   float y;
   float z;
   
-  float sqLen();
-  Vec3f operator+(const Vec3f &other);
-  Vec3f operator-();
-  Vec3f operator-(const Vec3f &other);
-  Vec3f operator*(float fac);
-  Vec3f operator/(float fac);
+  float sqLen() const;
+  Vec3f operator+(const Vec3f &other) const;
+  Vec3f operator-() const;
+  Vec3f operator-(const Vec3f &other) const;
+  Vec3f operator*(float fac) const;
+  Vec3f operator/(float fac) const;
 };

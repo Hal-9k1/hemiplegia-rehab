@@ -11,6 +11,8 @@ endif()
 
 add_executable(controller
   main.cpp
+  Vec3f.cpp
+  IMU.cpp
   )
 
 target_compile_features(controller PUBLIC

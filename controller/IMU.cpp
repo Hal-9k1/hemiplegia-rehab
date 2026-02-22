@@ -2,11 +2,10 @@
 
 #include <climits>
 #include <cmath>
-#include "pico/hardware_i2c.h"
+#include "hardware/i2c.h"
 #include "pico/time.h"
 
 #define I2C_ADDRESS 0x68
-#define SENSOR_REG_ADDR 0x3B
 #define CONF_REG_ADDR 0x1B
 #define ACCEL_SCALE_NUM 1 // [0, 4], increase -> more range less precision
 #define GYRO_SCALE_NUM 1
@@ -15,11 +14,13 @@
 #define GYRO_SCALE (125 * (2 << GYRO_SCALE_NUM)) // deg/s
 #define I2C_HANDLE i2c_default
 
+const static uint8_t SENSOR_REG_ADDR = 0x3B;
+
 IMU::IMU()
 {
   lastRead = getTimestampUs();
   gyroVelReading.z = 0; // we never read this
-  zeroAtRest(); // on first read(), lastRead
+  zeroAtRest();
   uint8_t configWrite[] { CONF_REG_ADDR, GYRO_SCALE_NUM << 2, ACCEL_SCALE_NUM << 2 };
   i2c_write_blocking(I2C_HANDLE, I2C_ADDRESS, configWrite, 3, true);
 }
@@ -68,12 +69,12 @@ float IMU::getPitch()
 
 float IMU::getRollVelocity()
 {
-  return gyroReading.y - gyroVelZero.y;
+  return gyroVelReading.y - gyroVelZero.y;
 }
 
 float IMU::getPitchVelocity()
 {
-  return gyroReading.x - gyroVelZero.x;
+  return gyroVelReading.x - gyroVelZero.x;
 }
 
 Vec3f IMU::getAccel()
@@ -81,7 +82,7 @@ Vec3f IMU::getAccel()
   return accelReading - accelGravity;
 }
 
-uint64_t getTimestampUs()
+uint64_t IMU::getTimestampUs()
 {
   return to_us_since_boot(get_absolute_time());
 }
