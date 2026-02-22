@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "pico/stdio.h"
 #include "pico/time.h"
-#include "imu.hpp"
+#include "IMU.hpp"
 
 bool reportAngle(repeating_timer_t *pTimer)
 {
