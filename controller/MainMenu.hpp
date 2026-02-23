@@ -7,13 +7,15 @@ class MainMenu
 {
 public:
   MainMenu(ActivityRegistry &activityReg);
+  ~MainMenu();
   void tick();
   Activity *getActivitySelection();
 
 private:
   ActivityRegistry &activityReg;
-  Activity *selectedActivity;
+  Activity *pSelectedActivity;
   Menu mainMenu;
+  Menu activityMenu;
 
   enum Submenu
   {
