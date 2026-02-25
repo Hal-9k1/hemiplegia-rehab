@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.hpp"
+#include "IOptionsMenu.hpp"
 
 class Activity
 {
@@ -11,4 +12,5 @@ public:
   void unpause();
   void tick();
   bool didFinish();
+  IOptionsMenu *getOptionsMenu();
 };

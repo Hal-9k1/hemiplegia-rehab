@@ -1,12 +1,11 @@
 #include "Program.hpp"
 
 Program::Program()
-{
-  conf.load();
-}
+{ }
 
 void Program::tick()
 {
+  inputs.tick();
   if (pCurrentActivity)
   {
     if (pauseMenu.isActive())
@@ -24,7 +23,7 @@ void Program::tick()
     else if (inputs.shouldPause())
     {
       pCurrentActivity->pause();
-      pauseMenu.enable();
+      pauseMenu.enable(*pCurrentActivity);
     }
     else
     {

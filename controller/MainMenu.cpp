@@ -35,8 +35,6 @@ void MainMenu::tick()
     mainMenu.tick();
     switch (mainMenu.getSelection())
     {
-    case Menu::NOT_SELECTED:
-      break;
     case 0:
       submenu = ACTIVITY_SELECT;
       break;

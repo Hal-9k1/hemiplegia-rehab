@@ -1,17 +1,25 @@
 #include "PauseMenu.hpp"
 
-PauseMenu::PauseMenu()
-  : active(false)
+const static char *pOptions[]
+{
+  "Options",
+  "Quit",
+  "Continue"
+};
+
+PauseMenu::PauseMenu(Inputs &inputs)
+  : active(false),
+    menu(inputs, sizeof(pOptions) / sizeof(const char *), pOptions)
 { }
 
 bool PauseMenu::isActive()
 {
-  return active;
+  return pPausedActivity != nullptr;
 }
 
 bool PauseMenu::didUnpause()
 {
-  return paused.getAndClear();
+  return unpaused.getAndClear();
 }
 
 bool PauseMenu::didQuit()
@@ -19,12 +27,35 @@ bool PauseMenu::didQuit()
   return quit.getAndClear();
 }
 
-void PauseMenu::enable()
+void PauseMenu::enable(Activity *pCurrentActivity)
 {
-  active = true;
+  pPausedActivityOptionsMenu = pPausedActivity->getOptionsMenu()
 }
 
 void PauseMenu::tick()
 {
-  // TODO
+  if (showingOptions)
+  {
+    pPausedActivityOptionsMenu->tick();
+    if (pPausedActivityOptionsMenu->didReturn())
+    {
+      showingOptions = false;
+    }
+  }
+  else
+  {
+    menu.tick();
+    switch (menu.getSelection())
+    {
+    case 0:
+      showingOptions = true;
+      break;
+    case 1:
+      quit.set();
+      break;
+    case 2:
+      unpaused.set();
+      break;
+    }
+  }
 }

@@ -4,5 +4,4 @@ class Config
 {
 public:
   Config();
-  void load();
 };
