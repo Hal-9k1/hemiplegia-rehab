@@ -17,9 +17,9 @@ public:
 private:
   Config conf;
   Inputs inputs;
+  ActivityRegistry activityReg;
   MainMenu mainMenu;
   PauseMenu pauseMenu;
-  ActivityRegistry activityReg;
   Activity *pCurrentActivity;
   DataManager dataMgr;
 };

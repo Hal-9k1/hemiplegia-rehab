@@ -1,6 +1,7 @@
 #include "Program.hpp"
 
 Program::Program()
+  : mainMenu(activityRegistry)
 { }
 
 void Program::tick()
