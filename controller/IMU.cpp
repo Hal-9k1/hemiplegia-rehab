@@ -3,7 +3,9 @@
 #include <climits>
 #include <cmath>
 #include "hardware/i2c.h"
+#include "hardware/gpio.h"
 #include "pico/time.h"
+#include <cstdio>
 
 #define I2C_ADDRESS 0x68
 #define CONF_REG_ADDR 0x1B
@@ -18,6 +20,11 @@ const static uint8_t SENSOR_REG_ADDR = 0x3B;
 
 IMU::IMU()
 {
+  i2c_init(I2C_HANDLE, 100 * 1000);
+  gpio_set_function(4, GPIO_FUNC_I2C);
+  gpio_set_function(5, GPIO_FUNC_I2C);
+  gpio_pull_up(4);
+  gpio_pull_up(5);
   lastRead = getTimestampUs();
   gyroVelReading.z = 0; // we never read this
   zeroAtRest();
@@ -39,18 +46,22 @@ void IMU::read()
   accelReading.x = regVals[0] * ACCEL_SCALE / UINT16_MAX;
   accelReading.y = regVals[1] * ACCEL_SCALE / UINT16_MAX;
   accelReading.z = regVals[2] * ACCEL_SCALE / UINT16_MAX;
+  printf("Accel {%.2f, %.2f, %.2f}\n", accelReading.x, accelReading.y, accelReading.z);
   tempReading = regVals[3] / 340 + 36.53; // see register map
-  gyroVelReading.x = regVals[4] * GYRO_SCALE / UINT16_MAX;
-  gyroVelReading.y = regVals[5] * GYRO_SCALE / UINT16_MAX;
+  gyroVelReading.x = regVals[4] * GYRO_SCALE / UINT16_MAX - gyroVelZero.x;
+  gyroVelReading.y = regVals[5] * GYRO_SCALE / UINT16_MAX - gyroVelZero.y;
+  printf("Gyro {%.2f, %.2f}\n", gyroVelReading.x, gyroVelReading.y);
   gyro = gyro + gyroVelReading * (now - lastRead) / 1000000;
   lastRead = now;
 }
 
 void IMU::zeroAtRest()
 {
+  gyroVelZero = {0, 0};
   read();
   gyroVelZero = gyroVelReading;
   accelGravity = accelReading;
+  printf("Recorded {%.2f, %.2f, %.2f} as gravity\n", accelGravity.x, accelGravity.y, accelGravity.z);
   gyro.x = atan2f(accelGravity.z, accelGravity.y);
   gyro.y = atan2f(accelGravity.z, -accelGravity.x);
 }
@@ -69,12 +80,12 @@ float IMU::getPitch()
 
 float IMU::getRollVelocity()
 {
-  return gyroVelReading.y - gyroVelZero.y;
+  return gyroVelReading.y;
 }
 
 float IMU::getPitchVelocity()
 {
-  return gyroVelReading.x - gyroVelZero.x;
+  return gyroVelReading.x;
 }
 
 Vec3f IMU::getAccel()
