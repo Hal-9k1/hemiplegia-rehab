@@ -7,7 +7,7 @@ float Vec3f::sqLen() const
 
 Vec3f Vec3f::operator+(const Vec3f &other) const
 {
-  return { x - other.x, y - other.y, z - other.z };
+  return { x + other.x, y + other.y, z + other.z };
 }
 
 Vec3f Vec3f::operator-(const Vec3f &other) const
