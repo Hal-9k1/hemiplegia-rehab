@@ -8,15 +8,17 @@
 #include <cstdio>
 
 #define I2C_ADDRESS 0x68
-#define CONF_REG_ADDR 0x1B
+#define CONF_REG_ADDR 0x1A
 #define SENSOR_REG_ADDR 0x3B
 #define ID_REG_ADDR 0x75
+#define POWER_MGMT_ADDR 0x6B
 #define ACCEL_SCALE_NUM 1 // [0, 4], increase -> more range less precision
 #define GYRO_SCALE_NUM 1
 #define NUM_SENSOR_REGISTERS 6 // accel x/y/z, temp, gyro x/y
 #define ACCEL_SCALE (2 << ACCEL_SCALE_NUM) // g force
 #define GYRO_SCALE (125 * (2 << GYRO_SCALE_NUM)) // deg/s
 #define I2C_HANDLE i2c_default
+#define DLPF_CONFIG_VALUE 3 // ~44Hz bandwidth, ~4.8ms reading delay
 
 static bool writeI2C(uint8_t *pBuf, int size);
 static bool readI2C(uint8_t *pBuf, int size);
@@ -36,10 +38,18 @@ IMU::IMU()
   {
     printf("I2C read sanity check failed!\n");
   }
-  uint8_t configWrite[] { CONF_REG_ADDR, GYRO_SCALE_NUM << 2, ACCEL_SCALE_NUM << 2 };
+  uint8_t configWrite[] {
+    CONF_REG_ADDR,
+    DLPF_CONFIG_VALUE,
+    GYRO_SCALE_NUM << 2,
+    ACCEL_SCALE_NUM << 2
+  };
   writeI2C(configWrite, sizeof(configWrite));
+  uint8_t powerWrite[] { POWER_MGMT_ADDR, 0 };
+  writeI2C(powerWrite, sizeof(powerWrite));
   gyroVelReading.z = 0; // we never read this
   lastRead = getTimestampUs();
+  sleep_ms(100);
   zeroAtRest();
 }
 
@@ -51,7 +61,12 @@ void IMU::read()
   readReg(SENSOR_REG_ADDR, buf, sizeof(buf));
   for (int i = 0; i < NUM_SENSOR_REGISTERS; ++i)
   {
-    regVals[i] = (float)((int)buf[i * 2] << 8 | buf[i * 2 + 1] - 0x8000);
+    int reg16 = buf[i * 2] << 8 | buf[i * 2 + 1];
+    if (reg16 & 0x8000)
+    {
+      reg16 = -(~reg16 & 0x7FFF);
+    }
+    regVals[i] = (float)reg16;
   }
   accelReading.x = regVals[0] * ACCEL_SCALE / UINT16_MAX;
   accelReading.y = regVals[1] * ACCEL_SCALE / UINT16_MAX;

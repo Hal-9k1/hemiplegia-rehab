@@ -9,8 +9,8 @@ bool reportAngle(repeating_timer_t *pTimer)
   printf(
     "Roll: %.2f Roll vel: %.2f Pitch: %.2f Pitch vel: %.2f X accel: %.2f Y accel %.2f Z accel %.2f\n",
     pIMU->getRoll(),
-    pIMU->getPitch(),
     pIMU->getRollVelocity(),
+    pIMU->getPitch(),
     pIMU->getPitchVelocity(),
     pIMU->getAccel().x,
     pIMU->getAccel().y,
@@ -34,6 +34,5 @@ int main()
   while (true)
   {
     imu.read();
-    sleep_us(50);
   }
 }
