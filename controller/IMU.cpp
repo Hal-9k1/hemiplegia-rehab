@@ -20,12 +20,12 @@
 #define GYRO_SCALE (125 * (2 << GYRO_SCALE_NUM)) // deg/s
 #define I2C_HANDLE i2c_default
 #define DLPF_CONFIG_VALUE 6 // ~5Hz bandwidth, ~19ms reading delay
-#define NUM_ZERO_AVERAGES 16
-#define ZERO_AVERAGE_PERIOD 400 // ms
+#define NUM_ZERO_AVERAGES 32
+#define ZERO_AVERAGE_PERIOD 200 // ms
 #define INIT_ZERO_DELAY 100 // ms
 #define GRAV_MAG_REST_THRESHOLD 0.05
-#define COS_GRAV_ANGLE_REST_THRESHOLD 0.7
-#define GYRO_VEL_SQMAG_REST_THRESHOLD 0.6
+#define GYRO_VEL_MAG_REST_THRESHOLD 0.7
+#define GYRO_VEL_SQMAG_REST_THRESHOLD (GYRO_VEL_MAG_REST_THRESHOLD * GYRO_VEL_MAG_REST_THRESHOLD)
 
 static bool writeI2C(uint8_t *pBuf, int size);
 static bool readI2C(uint8_t *pBuf, int size);
@@ -154,12 +154,9 @@ uint64_t IMU::getTimestampUs()
 bool IMU::isAtRest()
 {
   float gravMagDiff = fabs(sqrtf(accelReading.sqLen()) - sqrtf(accelGravity.sqLen()));
-  float cosGravAngleDiff = accelGravity.dot(accelReading)
-    - sqrtf(accelReading.sqLen() * accelGravity.sqLen());
   float gyroVelSqMag = gyroVelReading.sqLen();
-  //printf("gravMagDiff %.2f\tcosGravAngleDiff %.2f\tgyroVelSqMag %.2f\n", gravMagDiff, cosGravAngleDiff, gyroVelSqMag);
+  //printf("gravMagDiff %4.2f\tcosGravAngleDiff %4.2f\tgyroVelSqMag %4.2f\n", gravMagDiff, cosGravAngleDiff, gyroVelSqMag);
   return gravMagDiff < GRAV_MAG_REST_THRESHOLD
-    && cosGravAngleDiff > COS_GRAV_ANGLE_REST_THRESHOLD
     && gyroVelSqMag < GYRO_VEL_SQMAG_REST_THRESHOLD;
 }
 
