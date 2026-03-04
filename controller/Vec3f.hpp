@@ -6,7 +6,16 @@ struct Vec3f
   float y;
   float z;
   
+  /**
+   * Returns the square length of the vector.
+   */
   float sqLen() const;
+
+  /**
+   * Returns the dot product of this vector with another.
+   *
+   * @param other the other dot product factor.
+   */
   float dot(const Vec3f &other) const;
   Vec3f operator+(const Vec3f &other) const;
   Vec3f operator-() const;
