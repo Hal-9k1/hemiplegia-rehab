@@ -37,7 +37,7 @@ public:
   /**
    * Returns the roll angle in degrees.
    *
-   * @returns The roll angle in degrees. Greater positive values indicate rotation in the clockwise
+   * @return The roll angle in degrees. Greater positive values indicate rotation in the clockwise
    * direction (from the IMU's frame of reference.)
    */
   float getRoll();
@@ -45,7 +45,7 @@ public:
   /**
    * Returns the pitch angle in degrees.
    *
-   * @returns The roll angle in degrees. Greater positive values indicate rotation of the "nose" in
+   * @return The roll angle in degrees. Greater positive values indicate rotation of the "nose" in
    * the upward direction (from the IMU's frame of reference.)
    */
   float getPitch();
@@ -53,7 +53,7 @@ public:
   /**
    * Returns the roll velocity in degrees per second.
    *
-   * @returns The roll velocity in degrees per second. See documentation for getRoll() for
+   * @return The roll velocity in degrees per second. See documentation for getRoll() for
    * explanation of direction.
    */
   float getRollVelocity();
@@ -61,7 +61,7 @@ public:
   /**
    * Returns the pitch velocity in degrees per second.
    *
-   * @returns The pitch velocity in degrees per second. See documentation for getPitch() for
+   * @return The pitch velocity in degrees per second. See documentation for getPitch() for
    * explanation of direction.
    */
   float getPitchVelocity();
@@ -69,7 +69,7 @@ public:
   /**
    * Heuristically determines whether the IMU is at rest.
    *
-   * @returns Whether the IMU is determined to be at rest.
+   * @return Whether the IMU is determined to be at rest.
    */
   bool isAtRest();
   
