@@ -34,7 +34,7 @@ pico-sdk/.makestamp:
 	touch pico-sdk/.makestamp
 
 serial:
-	screen $(SERIAL_PATH)
+	screen screen -m $(SERIAL_PATH)
 
 $(clean_host_targets):
 	$(MAKE) -C $(@:clean-%=%) clean
