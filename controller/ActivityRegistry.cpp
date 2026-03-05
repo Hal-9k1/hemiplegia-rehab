@@ -1,18 +1,18 @@
 #include "ActivityRegistry.hpp"
 
 ActivityRegistry::ActivityRegistry()
-  : pActivities(nullptr)
+  : ppActivities(nullptr)
 {
   loadActivities();
   numActivities = loadingIdx;
   loadingIdx = 0;
-  pActivities = new Activity *[numActivities];
+  ppActivities = new IActivity *[numActivities];
   loadActivities();
 }
 
 ActivityRegistry::~ActivityRegistry()
 {
-  delete[] pActivities;
+  delete[] ppActivities;
 }
 
 int ActivityRegistry::getNumActivities()
@@ -24,13 +24,13 @@ void ActivityRegistry::getActivityNames(const char **pOut)
 {
   for (int i = 0; i < numActivities; ++i)
   {
-    pOut[i] = pActivities[i].getDisplayName();
+    pOut[i] = ppActivities[i]->getDisplayName();
   }
 }
 
-Activity *ActivityRegistry::getActivityByIndex(int index)
+IActivity *ActivityRegistry::getActivityByIndex(int index)
 {
-  return pActivities + index;
+  return ppActivities[index];
 }
 
 void ActivityRegistry::loadActivities()
@@ -41,9 +41,9 @@ void ActivityRegistry::loadActivities()
 template <typename T, typename... Args>
 void ActivityRegistry::loadActivity(Args... args)
 {
-  if (pActivities)
+  if (ppActivities)
   {
-    new (pActivities + loadingIdx) T(...);
+    ppActivities[loadingIdx] = new T(args...);
   }
   loadingIdx++;
 }

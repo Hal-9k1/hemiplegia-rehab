@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Activity.hpp"
+#include "IActivity.hpp"
 #include "ActivityRegistry.hpp"
 #include "Config.hpp"
 #include "DataManager.hpp"
@@ -20,6 +20,6 @@ private:
   ActivityRegistry activityReg;
   MainMenu mainMenu;
   PauseMenu pauseMenu;
-  Activity *pCurrentActivity;
+  IActivity *pCurrentActivity;
   DataManager dataMgr;
 };

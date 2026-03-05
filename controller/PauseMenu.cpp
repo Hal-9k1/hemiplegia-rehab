@@ -8,13 +8,14 @@ const static char *pOptions[]
 };
 
 PauseMenu::PauseMenu(Inputs &inputs)
-  : active(false),
-    menu(inputs, sizeof(pOptions) / sizeof(const char *), pOptions)
+  : pPausedActivityOptionsMenu(nullptr),
+    menu(inputs, sizeof(pOptions) / sizeof(const char *), pOptions),
+    showingOptions(false)
 { }
 
 bool PauseMenu::isActive()
 {
-  return pPausedActivity != nullptr;
+  return pPausedActivityOptionsMenu != nullptr;
 }
 
 bool PauseMenu::didUnpause()
@@ -27,14 +28,14 @@ bool PauseMenu::didQuit()
   return quit.getAndClear();
 }
 
-void PauseMenu::enable(Activity *pCurrentActivity)
+void PauseMenu::enable(IActivity &pausedActivity)
 {
-  pPausedActivityOptionsMenu = pPausedActivity->getOptionsMenu()
+  pPausedActivityOptionsMenu = pausedActivity.getOptionsMenu();
 }
 
 void PauseMenu::tick()
 {
-  if (showingOptions)
+  if (showingOptions && pPausedActivityOptionsMenu)
   {
     pPausedActivityOptionsMenu->tick();
     if (pPausedActivityOptionsMenu->didReturn())
@@ -55,6 +56,7 @@ void PauseMenu::tick()
       break;
     case 2:
       unpaused.set();
+      pPausedActivityOptionsMenu = nullptr;
       break;
     }
   }

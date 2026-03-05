@@ -1,8 +1,10 @@
 #pragma once
 
+#include "IActivity.hpp"
+
 class DataManager
 {
 public:
   DataManager();
-  void recordActivity(Activity &activity);
+  void recordActivity(IActivity &activity);
 };

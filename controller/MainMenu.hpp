@@ -1,21 +1,24 @@
 #pragma once
 
-#include "Activity.hpp"
+#include "IActivity.hpp"
+#include "ActivityRegistry.hpp"
+#include "Inputs.hpp"
 #include "Menu.hpp"
 
 class MainMenu
 {
 public:
-  MainMenu(ActivityRegistry &activityReg);
+  MainMenu(ActivityRegistry &activityReg, Inputs &inputs);
   ~MainMenu();
   void tick();
-  Activity *getActivitySelection();
+  IActivity *getActivitySelection();
 
 private:
   ActivityRegistry &activityReg;
-  Activity *pSelectedActivity;
+  IActivity *pSelectedActivity;
   Menu mainMenu;
   Menu activityMenu;
+  const char **pActivityMenuItems;
 
   enum Submenu
   {

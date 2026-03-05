@@ -52,7 +52,7 @@ void MainMenu::tick()
     int sel = activityMenu.getSelection();
     if (sel == activityReg.getNumActivities())
     {
-      subMenu = MAIN_MENU;
+      submenu = MAIN_MENU;
     }
     else if (sel != Menu::NOT_SELECTED)
     {
@@ -61,9 +61,9 @@ void MainMenu::tick()
   }
 }
 
-Activity *MainMenu::getActivitySelection()
+IActivity *MainMenu::getActivitySelection()
 {
-  Activity *ret = pSelectedActivity;
+  IActivity *ret = pSelectedActivity;
   pSelectedActivity = nullptr;
   return ret;
 }

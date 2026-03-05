@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Activity.hpp"
+#include "IActivity.hpp"
 
 class ActivityRegistry
 {
@@ -9,10 +9,10 @@ public:
   ~ActivityRegistry();
   int getNumActivities();
   void getActivityNames(const char **pOut);
-  Activity *getActivityByIndex(int index);
+  IActivity *getActivityByIndex(int index);
 
 private:
-  Activity *pActivities;
+  IActivity **ppActivities;
   int numActivities;
   int loadingIdx;
 

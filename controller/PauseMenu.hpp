@@ -1,19 +1,20 @@
 #pragma once
 
-#include "Activity.hpp"
+#include "IActivity.hpp"
 #include "AutoClearFlag.hpp"
+#include "Inputs.hpp"
 #include "IOptionsMenu.hpp"
 #include "Menu.hpp"
 
 class PauseMenu
 {
 public:
-  PauseMenu();
+  PauseMenu(Inputs &inputs);
   bool isActive();
   bool didUnpause();
   bool didQuit();
   bool didOpenOptions();
-  void enable();
+  void enable(IActivity &pausedActivity);
   void tick();
 
 private:
@@ -22,4 +23,5 @@ private:
   AutoClearFlag quit;
   AutoClearFlag options;
   Menu menu;
+  bool showingOptions;
 };

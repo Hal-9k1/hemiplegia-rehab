@@ -1,7 +1,8 @@
 #include "Program.hpp"
 
 Program::Program()
-  : mainMenu(activityRegistry)
+  : mainMenu(activityReg, inputs),
+    pauseMenu(inputs)
 { }
 
 void Program::tick()

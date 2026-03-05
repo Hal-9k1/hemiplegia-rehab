@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Inputs.hpp"
+
 class Menu
 {
 public:
@@ -8,9 +10,9 @@ public:
   int getCursorPos();
   int getSelection();
   void resetCursorPos();
+  const static int NOT_SELECTED = -1;
 
 private:
-  const static int NOT_SELECTED = -1;
 
   Inputs &inputs;
   int numOptions;

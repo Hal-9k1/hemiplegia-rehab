@@ -10,8 +10,16 @@ if (NOT TARGET tinyusb_device)
 endif()
 
 add_executable(controller
-  main.cpp
+  ActivityRegistry.cpp
+  AutoClearFlag.cpp
+  Config.cpp
+  DataManager.cpp
+  Inputs.cpp
+  MainMenu.cpp
+  Menu.cpp
+  PauseMenu.cpp
   Program.cpp
+  main.cpp
   )
 
 target_compile_features(controller PUBLIC
