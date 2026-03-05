@@ -21,7 +21,7 @@ $(PICO): %: pico-build/%/Makefile
 
 $(pico_makefiles): pico-sdk/.makestamp
 	mkdir -p pico-build/$(@:pico-build/%/Makefile=%)
-	cmake -DPICO_SDK_PATH=$(realpath ./pico-sdk) -S $(@:pico-build/%/Makefile=%) -B pico-build/$(@:pico-build/%/Makefile=%)
+	cmake -S $(@:pico-build/%/Makefile=%) -B pico-build/$(@:pico-build/%/Makefile=%)
 
 $(install_pico_targets): flash-%: %
 	cp pico-build/$(@:flash-%=%)/$(@:flash-%=%).uf2 $(INSTALL_PATH)
