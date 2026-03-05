@@ -8,10 +8,22 @@
 #include "MainMenu.hpp"
 #include "PauseMenu.hpp"
 
+/**
+ * Main class for the program, owning all state.
+ */
 class Program
 {
 public:
+  /**
+   * Constructs a Program.
+   */
   Program();
+
+  /**
+   * Performs incremental work in the program.
+   *
+   * No expectations for call duration are established.
+   */
   void tick();
 
 private:

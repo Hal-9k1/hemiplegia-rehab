@@ -1,5 +1,3 @@
-#include <cstdio>
-#include "pico/stdlib.h"
 #include "Program.hpp"
 
 int main()
