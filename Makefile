@@ -23,7 +23,7 @@ $(pico_makefiles): pico-build/%/Makefile: %/CMakeLists.txt
 
 $(pico_makefiles): pico-sdk/.makestamp
 	mkdir -p pico-build/$(@:pico-build/%/Makefile=%)
-	cmake -DPICO_SDK_PATH=$(realpath ./pico-sdk) -S $(@:pico-build/%/Makefile=%) -B pico-build/$(@:pico-build/%/Makefile=%)
+	cmake -S $(@:pico-build/%/Makefile=%) -B pico-build/$(@:pico-build/%/Makefile=%)
 
 $(install_pico_targets): flash-%: %
 	cp pico-build/$(@:flash-%=%)/$(@:flash-%=%).uf2 $(INSTALL_PATH)
@@ -36,7 +36,7 @@ pico-sdk/.makestamp:
 	touch pico-sdk/.makestamp
 
 serial:
-	screen $(SERIAL_PATH)
+	screen screen -m $(SERIAL_PATH)
 
 $(clean_host_targets):
 	$(MAKE) -C $(@:clean-%=%) clean
