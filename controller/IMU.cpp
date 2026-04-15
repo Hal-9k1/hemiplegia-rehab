@@ -24,7 +24,7 @@
 #define ZERO_AVERAGE_PERIOD 200 // ms
 #define INIT_ZERO_DELAY 100 // ms
 #define GRAV_MAG_REST_THRESHOLD 0.02
-#define GYRO_VEL_MAG_REST_THRESHOLD 0.1
+#define GYRO_VEL_MAG_REST_THRESHOLD 0.04
 #define GYRO_VEL_SQMAG_REST_THRESHOLD (GYRO_VEL_MAG_REST_THRESHOLD * GYRO_VEL_MAG_REST_THRESHOLD)
 #define RAD_TO_DEG_FAC (180.0 / M_PI)
 #define GYRO_VEL_FUDGE 0.1232876712
@@ -36,9 +36,7 @@ static bool readReg(uint8_t addr, uint8_t *pBuf, int size);
 IMU::IMU(bool autoZero)
   : presentedGyro{0, 0, 0},
     presentedGyroVelReading{0, 0, 0},
-    autoZero(autoZero),
-    pRestHistory{},
-    restHistoryCursor(0)
+    autoZero(autoZero)
 {
   i2c_init(I2C_HANDLE, 100 * 1000);
   gpio_set_function(4, GPIO_FUNC_I2C);
@@ -69,10 +67,6 @@ IMU::IMU(bool autoZero)
 
 void IMU::read()
 {
-  if (autoZero)
-  {
-    tickRest();
-  }
   if (autoZero && isAtRest())
   {
     zero();
@@ -171,27 +165,11 @@ uint64_t IMU::getTimestampUs()
 
 bool IMU::isAtRest()
 {
-  for (int i = 0; i < REST_STABILITY_FRAMES; ++i)
-  {
-    if (!pRestHistory[i])
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-void IMU::tickRest()
-{
   float gravMagDiff = fabs(sqrtf(accelReading.sqLen()) - sqrtf(accelGravity.sqLen()));
   float gyroVelSqMag = gyroVelReading.sqLen();
   //printf("gravMagDiff %6.2f\tgyroVelSqMag %4.2f\n", gravMagDiff, gyroVelSqMag);
-  pRestHistory[restHistoryCursor++] = gravMagDiff < GRAV_MAG_REST_THRESHOLD
+  return gravMagDiff < GRAV_MAG_REST_THRESHOLD
     && gyroVelSqMag < GYRO_VEL_SQMAG_REST_THRESHOLD;
-  if (restHistoryCursor == REST_STABILITY_FRAMES)
-  {
-    restHistoryCursor = 0;
-  }
 }
 
 static bool writeI2C(uint8_t *pBuf, int size)
