@@ -3,6 +3,8 @@
 #include "hardware/i2c.h"
 #include "Vec3f.hpp"
 
+#define REST_STABILITY_FRAMES 4
+
 /**
  * Controls the MPU-6050 IMU wired to the Pico.
  *
@@ -72,6 +74,11 @@ public:
    * @return Whether the IMU is determined to be at rest.
    */
   bool isAtRest();
+
+  /**
+   * Updates rest history, used to determine if the IMU is in a period of stability.
+   */
+  void tickRest();
   
 private:
   i2c_inst_t *pHandle;
@@ -85,6 +92,8 @@ private:
   float tempReading;
   uint64_t lastRead;
   bool autoZero;
+  bool pRestHistory[REST_STABILITY_FRAMES];
+  int restHistoryCursor;
 
   uint64_t getTimestampUs();
   void doRead();

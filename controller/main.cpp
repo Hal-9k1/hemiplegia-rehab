@@ -7,7 +7,7 @@ bool reportAngle(repeating_timer_t *pTimer)
 {
   IMU *pIMU = (IMU *)pTimer->user_data;
   printf(
-    "Roll: %4.2f\tRoll vel: %4.2f\tPitch: %4.2f\tPitch vel: %4.2f\n",
+    "Roll: %6.2f Roll vel: %6.2f\tPitch: %6.2f\tPitch vel: %6.2f\n",
     pIMU->getRoll(),
     pIMU->getRollVelocity(),
     pIMU->getPitch(),
@@ -30,6 +30,13 @@ int main()
   printf("Setup done\n");
   while (true)
   {
-    imu.read();
+    if (getchar_timeout_us(0) == 'e')
+    {
+      imu.zero();
+    }
+    else
+    {
+      imu.read();
+    }
   }
 }
