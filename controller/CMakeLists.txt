@@ -11,6 +11,8 @@ endif()
 
 add_executable(controller
   main.cpp
+  Vec3f.cpp
+  IMU.cpp
   )
 
 target_compile_features(controller PUBLIC
@@ -18,6 +20,8 @@ target_compile_features(controller PUBLIC
 
 target_link_libraries(controller PUBLIC
   pico_stdlib
+  hardware_i2c
+  pico_time
   )
 # output via USB, not UART
 pico_enable_stdio_uart(controller 0)

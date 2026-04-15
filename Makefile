@@ -19,6 +19,8 @@ $(HOST): %: %/%
 $(PICO): %: pico-build/%/Makefile
 	cmake --build pico-build/$@
 
+$(pico_makefiles): pico-build/%/Makefile: %/CMakeLists.txt
+
 $(pico_makefiles): pico-sdk/.makestamp
 	mkdir -p pico-build/$(@:pico-build/%/Makefile=%)
 	cmake -S $(@:pico-build/%/Makefile=%) -B pico-build/$(@:pico-build/%/Makefile=%)
