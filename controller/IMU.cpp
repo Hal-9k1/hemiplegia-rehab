@@ -21,7 +21,7 @@
 #define I2C_HANDLE i2c_default
 #define LOW_PASS_CONFIG_VALUE 6 // ~5Hz bandwidth, ~19ms reading delay
 #define NUM_ZERO_AVERAGES 32
-#define ZERO_AVERAGE_PERIOD 200 // ms
+#define ZERO_AVERAGE_PERIOD 400 // ms
 #define INIT_ZERO_DELAY 100 // ms
 #define GRAV_MAG_REST_THRESHOLD 0.02
 #define GYRO_VEL_MAG_REST_THRESHOLD 0.04
