@@ -34,7 +34,8 @@ static bool readI2C(uint8_t *pBuf, int size);
 static bool readReg(uint8_t addr, uint8_t *pBuf, int size);
 
 IMU::IMU(bool autoZero)
-  : presentedGyro{0, 0, 0},
+  : gyro{0, 0, 0},
+    presentedGyro{0, 0, 0},
     presentedGyroVelReading{0, 0, 0},
     autoZero(autoZero)
 {
@@ -123,16 +124,8 @@ void IMU::zero()
   gyroVelZero = sumGyro / NUM_ZERO_AVERAGES;
   accelGravity = sumAccel / NUM_ZERO_AVERAGES;
   printf("Gravity at zero <%4.2f, %4.2f, %4.2f>\n", accelGravity.x, accelGravity.y, accelGravity.z);
-  gyro.x = atan2f(accelGravity.y, accelGravity.z) * RAD_TO_DEG_FAC;
-  if (gyro.x < 0)
-  {
-    gyro.x += 360;
-  }
-  gyro.y = atan2f(-accelGravity.x, accelGravity.z) * RAD_TO_DEG_FAC;
-  if (gyro.y < 0)
-  {
-    gyro.y += 360;
-  }
+  gyro.x += remainderf(atan2f(accelGravity.y, accelGravity.z) * RAD_TO_DEG_FAC - gyro.x, 360);
+  gyro.y += remainderf(atan2f(-accelGravity.x, accelGravity.z) * RAD_TO_DEG_FAC - gyro.y, 360);
   printf("Zero gyro <%4.2f, %4.2f>\n", gyro.x, gyro.y);
 }
 
