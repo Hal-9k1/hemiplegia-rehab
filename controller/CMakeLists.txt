@@ -13,6 +13,7 @@ add_executable(controller
   main.cpp
   Vec3f.cpp
   IMU.cpp
+  Servo.cpp
   )
 
 target_compile_features(controller PUBLIC
@@ -21,6 +22,7 @@ target_compile_features(controller PUBLIC
 target_link_libraries(controller PUBLIC
   pico_stdlib
   hardware_i2c
+  hardware_pwm
   pico_time
   )
 # output via USB, not UART

@@ -9,7 +9,7 @@ Servo::Servo(int pin, float servoOverOutRatio)
 {
   gpio_set_function(pin, GPIO_FUNC_PWM);
   pwm_config config = pwm_get_default_config();
-  pwm_init(pwm_gpio_to_slice_num(pin), true);
+  pwm_init(pwm_gpio_to_slice_num(pin), &config, true);
   move(0);
 }
 
