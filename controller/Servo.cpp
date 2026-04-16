@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "pico/stdio.h"
+#include "pico/time.h"
 
 #include "hardware/gpio.h"
 #include "hardware/pwm.h"
@@ -28,7 +29,6 @@ void Servo::move(float angle)
   // servoAngle / 180 = frac
   // 1/20 * (frac + 1) = dutyFrac
   // floor(dutyFrac * 0xffff) = level
-  uint16_t level = (uint16_t)(500 + angle * gearRatio / 180.0f * 20000);
+  uint16_t level = (uint16_t)(600 + angle * gearRatio / 180.0f * 2300);
   pwm_set_chan_level(slice, channel, level);
-  printf("set angle %f logic %d\n", angle, level);
 }
