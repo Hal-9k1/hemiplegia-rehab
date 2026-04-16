@@ -1,15 +1,22 @@
 #include "Servo.hpp"
 
+#include <stdio.h>
+#include "pico/stdio.h"
+
 #include "hardware/gpio.h"
 #include "hardware/pwm.h"
 
 Servo::Servo(int pin, float servoOverOutRatio)
   : pin(pin),
-    gearRatio(servoOverOutRatio)
+    gearRatio(servoOverOutRatio),
+    slice(pwm_gpio_to_slice_num((unsigned int)pin)),
+    channel(pwm_gpio_to_channel((unsigned int)pin))
 {
   gpio_set_function(pin, GPIO_FUNC_PWM);
-  pwm_config config = pwm_get_default_config();
-  pwm_init(pwm_gpio_to_slice_num(pin), &config, true);
+  pwm_set_clkdiv(slice, 125.0f);
+  pwm_set_wrap(slice, 20000);
+  pwm_set_chan_level(slice, channel, 0);
+  pwm_set_enabled(slice, true);
   move(0);
 }
 
@@ -21,5 +28,7 @@ void Servo::move(float angle)
   // servoAngle / 180 = frac
   // 1/20 * (frac + 1) = dutyFrac
   // floor(dutyFrac * 0xffff) = level
-  pwm_set_gpio_level(pin, (uint16_t)(0.05 * (angle * gearRatio / 180 + 1) * 0xffff));
+  uint16_t level = (uint16_t)(500 + angle * gearRatio / 180.0f * 20000);
+  pwm_set_chan_level(slice, channel, level);
+  printf("set angle %f logic %d\n", angle, level);
 }

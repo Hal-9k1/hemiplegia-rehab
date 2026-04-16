@@ -1,7 +1,7 @@
 HOST :=
 PICO := controller
-INSTALL_PATH := /cygdrive/d
-SERIAL_PATH := /dev/ttyS2
+INSTALL_PATH ?= /mnt/d
+SERIAL_PATH ?= /dev/ttyACM0
 
 clean_host_targets := $(addprefix clean-,$(HOST))
 clean_pico_targets := $(addprefix clean-,$(PICO))

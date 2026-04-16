@@ -22,6 +22,7 @@ int main()
     if (angle >= 180)
     {
       angle = 0;
+      printf("reset\n");
       sleep_ms(1000);
     }
   }

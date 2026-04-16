@@ -9,4 +9,6 @@ public:
 private:
   int pin;
   float gearRatio;
+  unsigned int slice;
+  unsigned int channel;
 };
