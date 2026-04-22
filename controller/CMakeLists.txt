@@ -12,13 +12,18 @@ endif()
 add_executable(controller
   main.cpp
   Display.cpp
+  font.cpp
   )
 
 target_compile_features(controller PUBLIC
-  cxx_std_17)
+  cxx_std_17
+  )
 
 target_link_libraries(controller PUBLIC
   pico_stdlib
+  hardware_spi
+  pico_time
+  pico_platform
   )
 # output via USB, not UART
 pico_enable_stdio_uart(controller 0)
