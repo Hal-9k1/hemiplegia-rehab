@@ -16,13 +16,15 @@ add_executable(controller
   Motor.cpp
   )
 
+pico_generate_pio_header(controller ${CMAKE_CURRENT_LIST_DIR}/motorSpeed.pio)
+
 target_compile_features(controller PUBLIC
   cxx_std_17)
 
 target_link_libraries(controller PUBLIC
   pico_stdlib
   hardware_i2c
-  hardware_pwm
+  hardware_pio
   hardware_sync
   pico_time
   )

@@ -1,0 +1,37 @@
+.program motorSpeed
+
+.define ON_CYCLES 5
+
+begin:
+  pull block
+  mov x, osr
+  pull block
+  mov isr, osr
+step:
+  set pins 1 [ON_CYCLES]
+  set pins 0
+  mov y, isr
+losleep:
+  jmp y-- losleep
+  jmp x-- step
+  irq 0
+  jmp begin
+
+% c-sdk {
+  static void initMotorSpeedProgram(PIO pio, uint sm, uint offset, uint stepPin)
+  {
+    pio_sm_config conf = motorSpeed_program_get_default_config(offset);
+    sm_config_set_out_pins(&conf, stepPin, 1);
+    pio_gpio_init(pio, stepPin);
+    pio_sm_set_consecutive_pindirs(pio, sm, stepPin, 1, true);
+    pio_sm_set_clkdiv(pio, sm, 62.5f);
+    pio_sm_init(pio, sm, offset, &conf);
+    pio_sm_set_enabled(pio, sm, true);
+  }
+
+  static void beginMotorMotion(PIO pio, uint sm, uint ticks, uint hz)
+  {
+    pio_sm_put_blocking(pio, sm, ticks);
+    pio_sm_put_blocking(pio, sm, (uint)(2000000.0f / hz));
+  }
+%}

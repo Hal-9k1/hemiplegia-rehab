@@ -4,14 +4,14 @@ class Motor
 {
 public:
   Motor(int stepPin, int dirPin);
-  void move(int steps, int stepsPerSec);
+  void move(unsigned int steps, unsigned int stepsPerSec);
+  void setDirection(bool forward);
   void wait();
-  void onIrqWrap();
+  void onMotionDone();
 
 private:
   int stepPin;
   int dirPin;
-  unsigned int stepSlice;
-  unsigned int stepChannel;
-  int remTicks;
+  unsigned int stepPioMachine;
+  bool motionInProgress;
 };

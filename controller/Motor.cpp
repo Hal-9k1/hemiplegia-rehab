@@ -2,54 +2,59 @@
 
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
-#include "hardware/pwm.h"
+#include "hardware/pio.h"
 #include "hardware/regs/intctrl.h"
 #include "hardware/sync.h"
+#include "motorSpeed.pio.h"
+
+#define PIO_BLOCK pio0
 
 static Motor *inst = nullptr;
 
-static void globalOnIrqWrap()
+static void pioIrqHandler()
 {
-  inst->onIrqWrap();
+  inst->onMotionDone();
+  irq_clear(PIO0_IRQ_0);
 }
 
 Motor::Motor(int stepPin, int dirPin)
   : stepPin(stepPin),
     dirPin(dirPin),
-    stepSlice(pwm_gpio_to_slice_num((unsigned int)stepPin)),
-    stepChannel(pwm_gpio_to_channel((unsigned int)stepPin)),
-    remTicks(0)
+    stepPioMachine(pio_claim_unused_sm(PIO_BLOCK, true)),
+    motionInProgress(false)
 {
   inst = this;
-  gpio_set_function(stepPin, GPIO_FUNC_PWM);
-  pwm_set_clkdiv(stepSlice, 62.5f);
-  pwm_set_wrap(stepSlice, 20000);
-  pwm_set_chan_level(stepSlice, stepChannel, 5);
-  pwm_set_enabled(stepSlice, false);
-  pwm_set_irq_enabled(stepSlice, true);
-  irq_set_exclusive_handler(PWM_IRQ_WRAP, globalOnIrqWrap);
+  initMotorSpeedProgram(
+    PIO_BLOCK,
+    stepPioMachine,
+    pio_add_program(PIO_BLOCK, &motorSpeed_program),
+    stepPin
+  );
+  irq_set_exclusive_handler(PIO0_IRQ_0, pioIrqHandler);
+  gpio_set_function(dirPin, GPIO_FUNC_SIO);
+  gpio_set_dir(dirPin, GPIO_OUT);
 }
 
-void Motor::onIrqWrap()
+void Motor::onMotionDone()
 {
-  if (--remTicks <= 0)
-  {
-    pwm_set_irq_enabled(stepSlice, false);
-    remTicks = 0;
-    __sev();
-  }
+  motionInProgress = false;
+  __sev();
 }
 
-void Motor::move(int ticks, int hz)
+void Motor::move(unsigned int ticks, unsigned int hz)
 {
-  remTicks = ticks;
-  pwm_set_wrap(stepSlice, (int)(2000000.0f / hz));
-  pwm_set_enabled(stepSlice, true);
+  motionInProgress = true;
+  beginMotorMotion(PIO_BLOCK, stepPioMachine, ticks, hz);
+}
+
+void Motor::setDirection(bool forward)
+{
+  gpio_put(dirPin, forward);
 }
 
 void Motor::wait()
 {
-  while (remTicks)
+  while (motionInProgress)
   {
     __wfe();
   }
