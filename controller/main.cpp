@@ -1,20 +1,7 @@
 #include <cstdio>
 #include "pico/stdio.h"
 #include "pico/time.h"
-#include "IMU.hpp"
-
-bool reportAngle(repeating_timer_t *pTimer)
-{
-  IMU *pIMU = (IMU *)pTimer->user_data;
-  printf(
-    "Roll: %8.2f Roll vel: %8.2f Pitch: %8.2f Pitch vel: %8.2f\n",
-    pIMU->getRoll(),
-    pIMU->getRollVelocity(),
-    pIMU->getPitch(),
-    pIMU->getPitchVelocity()
-  );
-  return true;
-}
+#include "Servo.hpp"
 
 int main()
 {
@@ -24,19 +11,22 @@ int main()
     printf("Press any key to begin\n");
   }
   printf("Start\n");
-  repeating_timer_t timer;
-  IMU imu(false);
-  add_repeating_timer_ms(250, reportAngle, &imu, &timer);
+  Servo servo(6, 1);
   printf("Setup done\n");
+  float angle = 0;
   while (true)
   {
-    if (getchar_timeout_us(0) == 'e')
+    servo.move(angle);
+    angle += 0.5;
+    sleep_ms(10);
+    if (angle >= 180)
     {
-      imu.zero();
-    }
-    else
-    {
-      imu.read();
+      angle = 0;
+      printf("at 180\n");
+      sleep_ms(1000);
+      servo.move(0);
+      printf("reset\n");
+      sleep_ms(1000);
     }
   }
 }
