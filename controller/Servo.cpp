@@ -24,11 +24,11 @@ Servo::Servo(int pin, float servoOverOutRatio)
 void Servo::move(float angle)
 {
   // outputAngle * servoOverOutRatio = servoAngle
-  // 0deg -> 1/20 on
-  // 180deg -> 2/20 on
-  // servoAngle / 180 = frac
-  // 1/20 * (frac + 1) = dutyFrac
-  // floor(dutyFrac * 0xffff) = level
-  uint16_t level = (uint16_t)(600 + angle * gearRatio / 180.0f * 2300);
+  // According to datasheet:
+  //   0deg -> 1/20 on
+  //   180deg -> 2/20 on
+  // ...but this doesn't seem to be the case. 0.03 for 0deg, 0.145 for 180deg seems to work.
+  float proportion = angle * gearRatio / 180.0f;
+  uint16_t level = (uint16_t)(600 + proportion * 2300);
   pwm_set_chan_level(slice, channel, level);
 }
