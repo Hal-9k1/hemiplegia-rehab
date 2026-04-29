@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hardware/sync.h"
+
 class Motor
 {
 public:
@@ -14,4 +16,5 @@ private:
   int dirPin;
   unsigned int stepPioMachine;
   bool motionInProgress;
+  spin_lock_t *flagLock;
 };

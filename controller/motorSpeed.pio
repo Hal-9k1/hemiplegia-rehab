@@ -18,14 +18,19 @@ losleep:
   jmp begin
 
 % c-sdk {
-  static void initMotorSpeedProgram(PIO pio, uint sm, uint offset, uint stepPin)
+  static void initMotorSpeedProgram(PIO pio, uint sm, uint offset, uint stepPin, void (*onIrq)(void))
   {
     pio_sm_config conf = motorSpeed_program_get_default_config(offset);
-    sm_config_set_out_pins(&conf, stepPin, 1);
+    sm_config_set_set_pins(&conf, stepPin, 1);
     pio_gpio_init(pio, stepPin);
-    pio_sm_set_consecutive_pindirs(pio, sm, stepPin, 1, true);
-    pio_sm_set_clkdiv(pio, sm, 62.5f);
+
+    pio_set_irq0_source_enabled(pio, pis_interrupt0, true);
+    irq_set_exclusive_handler(PIO0_IRQ_0, onIrq);
+    irq_set_enabled(PIO0_IRQ_0, true);
+
     pio_sm_init(pio, sm, offset, &conf);
+    pio_sm_set_consecutive_pindirs(pio, sm, stepPin, 1, true);
+    pio_sm_set_clkdiv(pio, sm, 66.5f);
     pio_sm_set_enabled(pio, sm, true);
   }
 
