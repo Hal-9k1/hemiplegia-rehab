@@ -4,9 +4,9 @@
 #include "hardware/spi.h"
 #include "font.hpp"
 
-#define PIN_MOSI 3
-#define PIN_SCK 2
-#define PIN_CS 5
+#define PIN_MOSI 19
+#define PIN_SCK 18
+#define PIN_CS 17
 #define NUM_MODULES 4
 #define SPI_BLOCK spi0
 
