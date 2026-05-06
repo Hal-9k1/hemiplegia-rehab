@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-include(../pico_sdk_import.cmake)
+include(../pico-sdk/pico_sdk_init.cmake)
 
 project(controller C CXX ASM)
 pico_sdk_init()
@@ -13,6 +13,9 @@ add_executable(controller
   main.cpp
   Display.cpp
   font.cpp
+  Vec3f.cpp
+  IMU.cpp
+  Servo.cpp
   )
 
 target_compile_features(controller PUBLIC
@@ -20,10 +23,12 @@ target_compile_features(controller PUBLIC
   )
 
 target_link_libraries(controller PUBLIC
-  pico_stdlib
+  hardware_i2c
+  hardware_pwm
   hardware_spi
-  pico_time
   pico_platform
+  pico_stdlib
+  pico_time
   )
 # output via USB, not UART
 pico_enable_stdio_uart(controller 0)

@@ -14,6 +14,7 @@ int main()
   int scroll = 0;
   Display display;
   int textWidth = display.getTextWidth("HELLO WORLD");
+  printf("Setup done\n");
   while (true)
   {
     printf("Render\n");
