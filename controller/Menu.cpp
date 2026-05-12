@@ -1,4 +1,5 @@
 #include "Menu.hpp"
+#include <iostream>
 
 Menu::Menu(Inputs &inputs, int numOptions, const char **pOptions)
   : inputs(inputs), numOptions(numOptions), pOptions(pOptions), cursor(0)
@@ -6,7 +7,7 @@ Menu::Menu(Inputs &inputs, int numOptions, const char **pOptions)
 
 void Menu::tick()
 {
-  // TODO: draw on screen
+  std::cout << "  " << pOptions[cursor] << std::endl;
   if (cursor > 0 && inputs.shouldMoveMenuUp())
   {
     --cursor;

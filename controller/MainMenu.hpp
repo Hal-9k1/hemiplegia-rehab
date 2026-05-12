@@ -39,8 +39,8 @@ private:
   ActivityRegistry &activityReg;
   IActivity *pSelectedActivity;
   Menu mainMenu;
-  Menu activityMenu;
   const char **pActivityMenuItems;
+  Menu activityMenu;
 
   enum Submenu
   {

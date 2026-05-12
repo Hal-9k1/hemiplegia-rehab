@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include <iostream>
 
 const char *MAIN_MENU_OPTIONS[] {
   "Select activity",
@@ -20,7 +21,7 @@ MainMenu::MainMenu(ActivityRegistry &activityReg, Inputs &inputs)
     submenu(MAIN_MENU),
     mainMenu(inputs, 3, MAIN_MENU_OPTIONS),
     pActivityMenuItems(initActivityMenuItems(activityReg)),
-    activityMenu(inputs, activityReg.getNumActivities(), pActivityMenuItems)
+    activityMenu(inputs, activityReg.getNumActivities() + 1, pActivityMenuItems)
 { }
 
 MainMenu::~MainMenu()
@@ -32,6 +33,7 @@ void MainMenu::tick()
 {
   if (submenu == MAIN_MENU)
   {
+    std::cout << "MainMenu" << std::endl;
     mainMenu.tick();
     switch (mainMenu.getSelection())
     {
@@ -48,6 +50,7 @@ void MainMenu::tick()
   }
   else if (submenu == ACTIVITY_SELECT)
   {
+    std::cout << "ActivityMenu" << std::endl;
     activityMenu.tick();
     int sel = activityMenu.getSelection();
     if (sel == activityReg.getNumActivities())

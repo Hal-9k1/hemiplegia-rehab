@@ -2,12 +2,12 @@
 
 Program::Program()
   : mainMenu(activityReg, inputs),
-    pauseMenu(inputs)
+    pauseMenu(inputs),
+    pCurrentActivity(nullptr)
 { }
 
 void Program::tick()
 {
-  inputs.tick();
   if (pCurrentActivity)
   {
     if (pauseMenu.isActive())
@@ -46,4 +46,5 @@ void Program::tick()
       pCurrentActivity->start(conf);
     }
   }
+  inputs.tick();
 }

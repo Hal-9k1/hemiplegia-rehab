@@ -1,11 +1,28 @@
 #include "Inputs.hpp"
+#include <stdio.h>
 
 Inputs::Inputs()
 { }
 
 void Inputs::tick()
 {
-  // TODO: set flags from gpios
+  int c = getchar();
+  if (c == 'j')
+  {
+    menuDown.set();
+  }
+  else if (c == 'k')
+  {
+    menuUp.set();
+  }
+  else if (c == 'p')
+  {
+    pause.set();
+  }
+  else if (c == 'x')
+  {
+    menuSelect.set();
+  }
 }
 
 bool Inputs::shouldPause()
